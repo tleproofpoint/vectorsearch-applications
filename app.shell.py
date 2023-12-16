@@ -26,14 +26,23 @@ st.set_page_config(page_title="Impact Theory",
 ##############
 data_path = './data/impact_theory_data.json'
 ## RETRIEVER
+api_key = os.environ['WEAVIATE_API_KEY']
+url = os.environ['WEAVIATE_ENDPOINT']
+client = WeaviateClient(api_key, url)
+available_classes=client.show_classes()
 
 ## RERANKER
+reranker = ReRanker(model_name='cross-encoder/ms-marco-MiniLM-L-6-v2')
 
 ## LLM 
+llm = GPT_Turbo(model='gpt-3.5-turbo-0613', api_key=os.environ['OPENAI_API_KEY'])
 
 ## ENCODING
+encoding =  encoding_for_model('gpt-3.5-turbo-0613')
 
 ## INDEX NAME
+
+class_name = 'Impact_theory_minilm_256'
 
 ##############
 #  END CODE  #
