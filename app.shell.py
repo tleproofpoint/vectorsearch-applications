@@ -64,6 +64,7 @@ def main():
         retrieval_limit = st.slider('Retrieval limit for hybrid search', 1, 100, 20)
         reranker_topk = st.slider('Reranker Top K', 1, 50, 3)
         temputure_input = st.slider('Tempurture LLM', 0.0, 2.0, 1.0)
+        class_name = st.selectbox('Select class name', options=available_classes, placeholder='Select class name for Weaviate')
         
 
     st.image('./assets/impact-theory-logo.png', width=400)
@@ -91,7 +92,7 @@ def main():
                                                    where_filter=guest_filter,
                                                    limit=retrieval_limit)
             # rerank results
-            ranked_response = reranker.rerank(hybrid_response, query, True, reranker_topk)
+            ranked_response = reranker.rerank(results=hybrid_response, query=query, apply_sigmoid=True, top_k=reranker_topk)
             # validate token count is below threshold
             valid_response = validate_token_threshold(ranked_results=ranked_response, 
                                                     base_prompt=question_answering_prompt_series, 
@@ -137,7 +138,6 @@ def main():
                                 st.write(f'{result}')
                     except Exception as e:
                         print(e)
-                        continue
             # ##############
             # # START CODE #
             # ##############
